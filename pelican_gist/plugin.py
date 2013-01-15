@@ -97,7 +97,7 @@ def replace_gist_tags(generator):
         for match in gist_regex.findall(article._content):
             gist_id = match[1]
             filename = match[2]
-            logger.info('[gist]: found gist id {} and filename {}'.format(
+            logger.info('[gist]: Found gist id {} and filename {}'.format(
                 gist_id,
                 filename
             ))
@@ -107,10 +107,14 @@ def replace_gist_tags(generator):
 
             # Fetch the gist
             if not body:
+                logger.info('[gist]:   Gist did not exist in cache, fetching...')
                 body = fetch_gist(gist_id, filename)
 
                 if should_cache:
+                    logger.info('[gist]:   Saving gist to cache...')
                     set_cache(cache_location, gist_id, filename, body)
+            else:
+                logger.info('[gist]:   Found gist in cache.')
 
             # Create a context to render with
             context = generator.context.copy()
