@@ -9,6 +9,7 @@ This plugin allows you to embed `Gists`_ into your posts.
 
 """
 import logging
+import hashlib
 import os
 import re
 
@@ -38,12 +39,24 @@ def script_url(gist_id, filename):
     return "https://gist.github.com/{}.js?file={}".format(gist_id, filename)
 
 
-def get_cache(gist_id, filename):
-    return None
+def cache_filename(base, gist_id, filename):
+    h = hashlib.md5()
+    h.update(gist_id)
+    h.update(filename)
+    return os.path.join(base, '{}.cache'.format(h.hexdigest()))
 
 
-def set_cache(gist_id, filename, body):
-    pass
+def get_cache(base, gist_id, filename):
+    cache_file = cache_filename(base, gist_id, filename)
+    if not os.path.exists(cache_file):
+        return None
+    with open(cache_file, 'r') as f:
+        return f.read()
+
+
+def set_cache(base, gist_id, filename, body):
+    with open(cache_filename(base, gist_id, filename), 'w') as f:
+        f.write(body)
 
 
 def fetch_gist(gist_id, filename):
@@ -62,9 +75,23 @@ def fetch_gist(gist_id, filename):
     return body
 
 
+def setup_gist(pelican):
+    """Setup the default settings."""
+
+    pelican.settings.setdefault('GIST_CACHE_ENABLED', True)
+    pelican.settings.setdefault('GIST_CACHE_LOCATION',
+        '/tmp/gist-cache')
+
+    # Make sure the gist cache directory exists
+    cache_base = pelican.settings.get('GIST_CACHE_LOCATION')
+    if not os.path.exists(cache_base):
+        os.makedirs(cache_base)
+
+
 def replace_gist_tags(generator):
     """Replace gist tags in the article content."""
-    should_cache = generator.context.get('GIST_CACHE_ENABLED', True)
+    should_cache = generator.context.get('GIST_CACHE_ENABLED')
+    cache_location = generator.context.get('GIST_CACHE_LOCATION')
 
     for article in generator.articles:
         for match in gist_regex.findall(article._content):
@@ -76,14 +103,14 @@ def replace_gist_tags(generator):
             ))
 
             if should_cache:
-                body = get_cache(gist_id, filename)
+                body = get_cache(cache_location, gist_id, filename)
 
             # Fetch the gist
             if not body:
                 body = fetch_gist(gist_id, filename)
 
                 if should_cache:
-                    set_cache(gist_id, filename, body)
+                    set_cache(cache_location, gist_id, filename, body)
 
             # Create a context to render with
             context = generator.context.copy()
@@ -100,5 +127,7 @@ def replace_gist_tags(generator):
 
 def register():
     """Plugin registration."""
+
+    signals.initialized.connect(setup_gist)
 
     signals.article_generator_finalized.connect(replace_gist_tags)
