@@ -1,5 +1,5 @@
 __title__ = 'pelican-gist'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Chris Streeter'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2013'

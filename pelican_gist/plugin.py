@@ -13,18 +13,15 @@ import hashlib
 import os
 import re
 
-from jinja2 import Template
-from pelican import signals
-
 
 logger = logging.getLogger(__name__)
 gist_regex = re.compile(r'(<p>\[gist:id\=([0-9]+),file\=([^\]]+)\]</p>)')
-gist_template = Template("""<div class="gist">
+gist_template = """<div class="gist">
     <script src='{{script_url}}'></script>
     <noscript>
         <pre><code>{{code}}</code></pre>
     </noscript>
-</div>""")
+</div>"""
 
 
 def html_output(script_url, code):
@@ -90,6 +87,9 @@ def setup_gist(pelican):
 
 def replace_gist_tags(generator):
     """Replace gist tags in the article content."""
+    from jinja2 import Template
+    template = Template(gist_template)
+
     should_cache = generator.context.get('GIST_CACHE_ENABLED')
     cache_location = generator.context.get('GIST_CACHE_LOCATION')
 
@@ -124,13 +124,14 @@ def replace_gist_tags(generator):
             })
 
             # Render the template
-            replacement = gist_template.render(context)
+            replacement = template.render(context)
 
             article._content = article._content.replace(match[0], replacement)
 
 
 def register():
     """Plugin registration."""
+    from pelican import signals
 
     signals.initialized.connect(setup_gist)
 
