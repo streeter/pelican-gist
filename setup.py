@@ -40,8 +40,7 @@ setup(
     package_dir={'pelican_gist': 'pelican_gist'},
     include_package_data=True,
     install_requires=requires,
-    license=open('LICENSE').read(),
-    zip_safe=False,
+    license='MIT',
     classifiers=(
         'Development Status :: 4 - Beta',
         'Environment :: Console',
