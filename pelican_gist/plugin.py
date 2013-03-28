@@ -128,8 +128,8 @@ def replace_gist_tags(generator):
             # Create a context to render with
             context = generator.context.copy()
             context.update({
-                'script_url': script_url(gist_id, filename),
-                'code': body,
+                'script_url': unicode(script_url(gist_id, filename), 'utf-8'),
+                'code': unicode(body, 'utf-8'),
             })
 
             # Render the template
