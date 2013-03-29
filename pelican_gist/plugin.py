@@ -12,10 +12,12 @@ import logging
 import hashlib
 import os
 import re
+import itertools
 
 
 logger = logging.getLogger(__name__)
-gist_regex = re.compile(r'(<p>\[gist:id\=([0-9]+),file\=([^\]]+)\]</p>)')
+gist_regex = re.compile(r'(<p>\[gist:id\=([0-9a-fA-F]+),file\=([^\]]+)\]</p>)')
+gist_regex2 = re.compile(r'(<p>\[gist:id\=([0-9a-fA-F]+)\]</p>)')
 gist_template = """<div class="gist">
     <script src='{{script_url}}'></script>
     <noscript>
@@ -28,35 +30,40 @@ def html_output(script_url, code):
     return ""
 
 
-def gist_url(gist_id, filename):
-    return "https://raw.github.com/gist/{}/{}".format(gist_id, filename)
+def gist_url(gist_id, filename=None):
+    if filename is not None:
+        return "https://raw.github.com/gist/{}/{}".format(gist_id, filename)
+    return "https://raw.github.com/gist/{}".format(gist_id)
 
 
-def script_url(gist_id, filename):
-    return "https://gist.github.com/{}.js?file={}".format(gist_id, filename)
+def script_url(gist_id, filename=None):
+    if filename is not None:
+        return "https://gist.github.com/{}.js?file={}".format(gist_id, filename)
+    return "https://gist.github.com/{}.js".format(gist_id)
 
 
-def cache_filename(base, gist_id, filename):
+def cache_filename(base, gist_id, filename=None):
     h = hashlib.md5()
     h.update(gist_id)
-    h.update(filename)
+    if filename is not None:
+        h.update(filename)
     return os.path.join(base, '{}.cache'.format(h.hexdigest()))
 
 
-def get_cache(base, gist_id, filename):
+def get_cache(base, gist_id, filename=None):
     cache_file = cache_filename(base, gist_id, filename)
     if not os.path.exists(cache_file):
         return None
     with open(cache_file, 'r') as f:
         return f.read()
 
-
-def set_cache(base, gist_id, filename, body):
+#XXX: `body=None` to fix SyntaxError: non-default argument follows default argument
+def set_cache(base, gist_id, filename=None, body=None):
     with open(cache_filename(base, gist_id, filename), 'w') as f:
         f.write(body)
 
 
-def fetch_gist(gist_id, filename):
+def fetch_gist(gist_id, filename=None):
     """Fetch a gist and return the raw contents."""
     import requests
 
@@ -94,9 +101,11 @@ def replace_gist_tags(generator):
     cache_location = generator.context.get('GIST_CACHE_LOCATION')
 
     for article in generator.articles:
-        for match in gist_regex.findall(article._content):
+        for match in itertools.chain(gist_regex.findall(article._content), gist_regex2.findall(article._content)):
             gist_id = match[1]
-            filename = match[2]
+            filename = None
+            if len(match) == 3:
+                filename = match[2]
             logger.info('[gist]: Found gist id {} and filename {}'.format(
                 gist_id,
                 filename
@@ -119,8 +128,8 @@ def replace_gist_tags(generator):
             # Create a context to render with
             context = generator.context.copy()
             context.update({
-                'script_url': script_url(gist_id, filename),
-                'code': body,
+                'script_url': unicode(script_url(gist_id, filename), 'utf-8'),
+                'code': unicode(body, 'utf-8'),
             })
 
             # Render the template
