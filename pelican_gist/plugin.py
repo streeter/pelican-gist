@@ -12,12 +12,10 @@ import logging
 import hashlib
 import os
 import re
-import itertools
 
 
 logger = logging.getLogger(__name__)
-gist_regex = re.compile(r'(<p>\[gist:id\=([0-9a-fA-F]+),file\=([^\]]+)\]</p>)')
-gist_regex2 = re.compile(r'(<p>\[gist:id\=([0-9a-fA-F]+)\]</p>)')
+gist_regex = re.compile(r'(<p>\[gist:id\=([0-9a-fA-F]+)(,file\=([^\]]+))?\]</p>)')
 gist_template = """<div class="gist">
     <script src='{{script_url}}'></script>
     <noscript>
@@ -101,11 +99,11 @@ def replace_gist_tags(generator):
     cache_location = generator.context.get('GIST_CACHE_LOCATION')
 
     for article in generator.articles:
-        for match in itertools.chain(gist_regex.findall(article._content), gist_regex2.findall(article._content)):
+        for match in gist_regex.findall(article._content):
             gist_id = match[1]
             filename = None
-            if len(match) == 3:
-                filename = match[2]
+            if match[3]:
+                filename = match[3]
             logger.info('[gist]: Found gist id {} and filename {}'.format(
                 gist_id,
                 filename
