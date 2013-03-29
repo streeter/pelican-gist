@@ -29,15 +29,17 @@ def html_output(script_url, code):
 
 
 def gist_url(gist_id, filename=None):
+    url = "https://raw.github.com/gist/{}".format(gist_id)
     if filename is not None:
-        return "https://raw.github.com/gist/{}/{}".format(gist_id, filename)
-    return "https://raw.github.com/gist/{}".format(gist_id)
+        url += "/{}".format(filename)
+    return url
 
 
 def script_url(gist_id, filename=None):
+    url = "https://gist.github.com/{}.js".format(gist_id)
     if filename is not None:
-        return "https://gist.github.com/{}.js?file={}".format(gist_id, filename)
-    return "https://gist.github.com/{}.js".format(gist_id)
+        url += "?file={}".format(filename)
+    return url
 
 
 def cache_filename(base, gist_id, filename=None):
