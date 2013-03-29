@@ -57,8 +57,8 @@ def get_cache(base, gist_id, filename=None):
     with open(cache_file, 'r') as f:
         return f.read()
 
-#XXX: `body=None` to fix SyntaxError: non-default argument follows default argument
-def set_cache(base, gist_id, filename=None, body=None):
+
+def set_cache(base, gist_id, body, filename=None):
     with open(cache_filename(base, gist_id, filename), 'w') as f:
         f.write(body)
 
@@ -121,7 +121,7 @@ def replace_gist_tags(generator):
 
                 if should_cache:
                     logger.info('[gist]:   Saving gist to cache...')
-                    set_cache(cache_location, gist_id, filename, body)
+                    set_cache(cache_location, gist_id, body, filename)
             else:
                 logger.info('[gist]:   Found gist in cache.')
 
