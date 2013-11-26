@@ -41,9 +41,9 @@ def script_url(gist_id, filename=None):
 
 def cache_filename(base, gist_id, filename=None):
     h = hashlib.md5()
-    h.update(gist_id)
+    h.update(str(gist_id).encode())
     if filename is not None:
-        h.update(filename)
+        h.update(filename.encode())
     return os.path.join(base, '{}.cache'.format(h.hexdigest()))
 
 
