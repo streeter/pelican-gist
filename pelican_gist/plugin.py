@@ -8,8 +8,9 @@ This plugin allows you to embed `Gists`_ into your posts.
 .. _Gists: https://gist.github.com/
 
 """
-import logging
+from __future__ import unicode_literals
 import hashlib
+import logging
 import os
 import re
 
@@ -51,13 +52,13 @@ def get_cache(base, gist_id, filename=None):
     cache_file = cache_filename(base, gist_id, filename)
     if not os.path.exists(cache_file):
         return None
-    with open(cache_file, 'r') as f:
-        return f.read()
+    with open(cache_file, 'rb') as f:
+        return f.read().decode()
 
 
 def set_cache(base, gist_id, body, filename=None):
-    with open(cache_filename(base, gist_id, filename), 'w') as f:
-        f.write(body)
+    with open(cache_filename(base, gist_id, filename), 'wb') as f:
+        f.write(body.encode())
 
 
 def fetch_gist(gist_id, filename=None):
@@ -125,8 +126,8 @@ def replace_gist_tags(generator):
             # Create a context to render with
             context = generator.context.copy()
             context.update({
-                'script_url': unicode(script_url(gist_id, filename), 'utf-8'),
-                'code': unicode(body, 'utf-8'),
+                'script_url': script_url(gist_id, filename),
+                'code': body,
             })
 
             # Render the template
