@@ -25,10 +25,6 @@ gist_template = """<div class="gist">
 </div>"""
 
 
-def html_output(script_url, code):
-    return ""
-
-
 def gist_url(gist_id, filename=None):
     url = "https://gist.github.com/raw/{}".format(gist_id)
     if filename is not None:
