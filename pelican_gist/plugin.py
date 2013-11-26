@@ -15,7 +15,8 @@ import re
 
 
 logger = logging.getLogger(__name__)
-gist_regex = re.compile(r'(<p>\[gist:id\=([0-9a-fA-F]+)(,file\=([^\]]+))?\]</p>)')
+gist_regex = re.compile(
+    r'(<p>\[gist:id\=([0-9a-fA-F]+)(,file\=([^\]]+))?\]</p>)')
 gist_template = """<div class="gist">
     <script src='{{script_url}}'></script>
     <noscript>
@@ -84,7 +85,7 @@ def setup_gist(pelican):
 
     pelican.settings.setdefault('GIST_CACHE_ENABLED', True)
     pelican.settings.setdefault('GIST_CACHE_LOCATION',
-        '/tmp/gist-cache')
+                                '/tmp/gist-cache')
 
     # Make sure the gist cache directory exists
     cache_base = pelican.settings.get('GIST_CACHE_LOCATION')
@@ -116,14 +117,14 @@ def replace_gist_tags(generator):
 
             # Fetch the gist
             if not body:
-                logger.info('[gist]:   Gist did not exist in cache, fetching...')
+                logger.info('[gist]: Gist did not exist in cache, fetching...')
                 body = fetch_gist(gist_id, filename)
 
                 if should_cache:
-                    logger.info('[gist]:   Saving gist to cache...')
+                    logger.info('[gist]: Saving gist to cache...')
                     set_cache(cache_location, gist_id, body, filename)
             else:
-                logger.info('[gist]:   Found gist in cache.')
+                logger.info('[gist]: Found gist in cache.')
 
             # Create a context to render with
             context = generator.context.copy()
