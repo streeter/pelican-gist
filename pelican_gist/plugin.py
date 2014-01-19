@@ -62,7 +62,7 @@ def set_cache(base, gist_id, body, filename=None):
 
 
 def fetch_gist(gist_id, filename=None):
-    """Fetch a gist and return the raw contents."""
+    """Fetch a gist and return the contents as a string."""
     import requests
 
     url = gist_url(gist_id, filename)
@@ -70,9 +70,9 @@ def fetch_gist(gist_id, filename=None):
 
     if response.status_code != 200:
         raise Exception('Got a bad status looking up gist.')
-    body = response.content
+    body = response.text
     if not body:
-        raise Exception('Unable to get the gist content.')
+        raise Exception('Unable to get the gist contents.')
 
     return body
 

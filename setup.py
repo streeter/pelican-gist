@@ -24,7 +24,11 @@ packages = [
 ]
 
 requires = [
-    'requests',
+    'requests>=2.2.0',
+]
+
+tests_require = [
+    'mock>=1.0.1'
 ]
 
 setup(
@@ -40,6 +44,7 @@ setup(
     package_dir={'pelican_gist': 'pelican_gist'},
     include_package_data=True,
     install_requires=requires,
+    tests_require=tests_require,
     license='MIT',
     classifiers=(
         'Development Status :: 4 - Beta',
