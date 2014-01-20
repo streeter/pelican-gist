@@ -10,6 +10,8 @@ from __future__ import unicode_literals
 import os
 
 from pelican_gist import plugin as gistplugin
+from mock import patch
+import requests.models
 
 
 def test_gist_url():
@@ -90,3 +92,14 @@ def test_set_get_cache():
     # Fetch the same file
     cached = gistplugin.get_cache(path_base, gist_id, filename)
     assert cached == body
+
+
+def test_fetch_gist():
+    """ fetch_gist should return a string with the response content """
+    CODE_BODY = "code"
+    with patch('requests.get') as get:
+        return_response = requests.models.Response()
+        return_response.status_code = 200
+        return_response._content= CODE_BODY.encode()
+        get.return_value = return_response
+        assert gistplugin.fetch_gist(1) == CODE_BODY
