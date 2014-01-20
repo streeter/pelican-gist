@@ -13,7 +13,7 @@ import pelican_gist
 
 
 if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
+    os.system('python setup.py sdist bdist_wheel upload')
     sys.exit()
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
