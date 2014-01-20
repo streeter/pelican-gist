@@ -95,6 +95,8 @@ See `contributors`_ on GitHub.
 Changelog
 ---------
 
+- 0.3.2 - Added universal wheel support
+
 - 0.3.1 - Fixed an issue with Python 3 and fetching gist content
 
 - 0.3.0 - Added Python 3 support
