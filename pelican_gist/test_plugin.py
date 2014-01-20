@@ -95,7 +95,7 @@ def test_set_get_cache():
 
 
 def test_fetch_gist():
-    """ fetch_gist should return a string with the response content """
+    """Ensure fetch_gist returns the response content as a string."""
     CODE_BODY = "code"
     with patch('requests.get') as get:
         return_response = requests.models.Response()
