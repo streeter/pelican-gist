@@ -86,6 +86,12 @@ Install the necessary requirements with `pip install -r requirements.txt`. Once 
     ====================== 5 passed in 0.11 seconds ======================
 
 
+Authors
+---------
+
+See `contributors`_ on GitHub.
+
+
 Changelog
 ---------
 
@@ -99,4 +105,5 @@ Uses the `MIT`_ license.
 
 
 .. _Pelican: http://blog.getpelican.com/
+.. _contributors: https://github.com/streeter/pelican-gist/graphs/contributors
 .. _MIT: http://opensource.org/licenses/MIT
