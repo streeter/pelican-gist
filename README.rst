@@ -71,19 +71,19 @@ Testing
 
 Install the necessary requirements with `pip install -r requirements.txt`. Once those are installed, you can run the tests with: `py.test`. So the whole workflow looks like:
 
-```bash
-$ pip install -r requrements.txt
-Successfully installed pytest requests mock py
-Cleaning up...
-$ py.test
-======================== test session starts =========================
-platform darwin -- Python 2.7.6 -- pytest-2.5.1
-collected 5 items
+.. code-block:: bash
 
-pelican_gist/test_plugin.py .....
+    $ pip install -r requrements.txt
+    Successfully installed pytest requests mock py
+    Cleaning up...
+    $ py.test
+    ======================== test session starts =========================
+    platform darwin -- Python 2.7.6 -- pytest-2.5.1
+    collected 5 items
 
-====================== 5 passed in 0.11 seconds ======================
-```
+    pelican_gist/test_plugin.py .....
+
+    ====================== 5 passed in 0.11 seconds ======================
 
 
 Changelog
