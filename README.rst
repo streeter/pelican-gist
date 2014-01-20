@@ -66,6 +66,25 @@ Settings
 
 ``GIST_CACHE_ENABLED`` - Specifies whether to cache the gist on disk or not. Default is ``True``. (Optional)
 
+Testing
+---------
+
+Install the necessary requirements with `pip install -r requirements.txt`. Once those are installed, you can run the tests with: `py.test`. So the whole workflow looks like:
+
+```bash
+$ pip install -r requrements.txt
+Successfully installed pytest requests mock py
+Cleaning up...
+$ py.test
+======================== test session starts =========================
+platform darwin -- Python 2.7.6 -- pytest-2.5.1
+collected 5 items
+
+pelican_gist/test_plugin.py .....
+
+====================== 5 passed in 0.11 seconds ======================
+```
+
 
 Changelog
 ---------
