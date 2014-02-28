@@ -27,7 +27,7 @@ gist_template = """<div class="gist">
 
 
 def gist_url(gist_id, filename=None):
-    url = "https://gist.github.com/raw/{}".format(gist_id)
+    url = "https://gist.githubusercontent.com/raw/{}".format(gist_id)
     if filename is not None:
         url += "/{}".format(filename)
     return url
