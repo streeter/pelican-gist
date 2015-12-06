@@ -13,6 +13,7 @@ import hashlib
 import logging
 import os
 import re
+import codecs
 
 
 logger = logging.getLogger(__name__)
@@ -52,12 +53,12 @@ def get_cache(base, gist_id, filename=None):
     cache_file = cache_filename(base, gist_id, filename)
     if not os.path.exists(cache_file):
         return None
-    with open(cache_file, 'rb') as f:
+    with codecs.open(cache_file, 'rb', 'utf-8') as f:
         return f.read().decode()
 
 
 def set_cache(base, gist_id, body, filename=None):
-    with open(cache_filename(base, gist_id, filename), 'wb') as f:
+    with codecs.open(cache_filename(base, gist_id, filename), 'wb', 'utf-8') as f:
         f.write(body.encode())
 
 
