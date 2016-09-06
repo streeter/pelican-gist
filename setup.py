@@ -25,6 +25,7 @@ packages = [
 
 requires = [
     'requests>=2.2.0',
+    'pygments'
 ]
 
 tests_require = [

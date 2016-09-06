@@ -59,12 +59,20 @@ Notice it is using the id only. The resulting HTML will look like:
         </noscript>
     </div>
 
+If a file type is specified, uses pygment to highlight the noscript version of the code:
+
+.. code-block:: html
+
+    [gist:id=3254906,file=brew-update-notifier.sh,filetype=bash]
+
 There is also support for private gists where they have the gist id that looks like ``e34db4c532a6cfa1f711``.
 
 Settings
 --------
 
 ``GIST_CACHE_ENABLED`` - Specifies whether to cache the gist on disk or not. Default is ``True``. (Optional)
+``GIST_PYGMENTS_STYLE`` - Style used by pygments for syntax highlighting. Possible values are the strings from `pygments.styles.get_all_styles()`. Default is ``'default'``. (Optional)
+``GIST_PYGMENTS_LINENUM`` - Defines if pygments should add line numbers to the rendered HTML. Default is ``False``. (Optional)
 
 Testing
 ---------

@@ -14,18 +14,17 @@ import logging
 import os
 import re
 import codecs
-
+import pygments
 
 logger = logging.getLogger(__name__)
 gist_regex = re.compile(
-    r'(<p>\[gist:id\=([0-9a-fA-F]+)(,file\=([^\]]+))?\]</p>)')
+    r'(<p>\[gist:id\=([0-9a-fA-F]+)(,file\=([^\]]+))?(,filetype\=([a-zA-Z]+))?\]</p>)')
 gist_template = """<div class="gist">
     <script src='{{script_url}}'></script>
     <noscript>
-        <pre><code>{{code}}</code></pre>
+        {{code}}
     </noscript>
 </div>"""
-
 
 def gist_url(gist_id, filename=None):
     url = "https://gist.githubusercontent.com/raw/{}".format(gist_id)
@@ -80,16 +79,26 @@ def fetch_gist(gist_id, filename=None):
 
 def setup_gist(pelican):
     """Setup the default settings."""
-
     pelican.settings.setdefault('GIST_CACHE_ENABLED', True)
     pelican.settings.setdefault('GIST_CACHE_LOCATION',
                                 '/tmp/gist-cache')
+    pelican.settings.setdefault('GIST_PYGMENTS_STYLE', 'default')
+    pelican.settings.setdefault('GIST_PYGMENTS_LINENUM', False)
 
     # Make sure the gist cache directory exists
     cache_base = pelican.settings.get('GIST_CACHE_LOCATION')
     if not os.path.exists(cache_base):
         os.makedirs(cache_base)
 
+
+def render_code(code, filetype, pygments_style):
+    """Renders a piece of code into HTML. Highlights syntax if filetype is specfied"""
+    if filetype:
+        lexer = pygments.lexers.get_lexer_by_name(filetype)
+        formatter = pygments.formatters.HtmlFormatter(style=pygments_style)
+        return pygments.highlight(code, lexer, formatter)
+    else:
+        return "<pre><code>{}</code></pre>".format(code)
 
 def replace_gist_tags(generator):
     """Replace gist tags in the article content."""
@@ -98,16 +107,21 @@ def replace_gist_tags(generator):
 
     should_cache = generator.context.get('GIST_CACHE_ENABLED')
     cache_location = generator.context.get('GIST_CACHE_LOCATION')
+    pygments_style = generator.context.get('GIST_PYGMENTS_STYLE')
 
     for article in generator.articles:
         for match in gist_regex.findall(article._content):
             gist_id = match[1]
             filename = None
+            filetype = None
             if match[3]:
                 filename = match[3]
-            logger.info('[gist]: Found gist id {} and filename {}'.format(
+            if match[5]:
+                filetype = match[5]
+            logger.info('[gist]: Found gist id {} with filename {} and filetype {}'.format(
                 gist_id,
-                filename
+                filename,
+                filetype,
             ))
 
             if should_cache:
@@ -128,7 +142,7 @@ def replace_gist_tags(generator):
             context = generator.context.copy()
             context.update({
                 'script_url': script_url(gist_id, filename),
-                'code': body,
+                'code': render_code(body, filetype, pygments_style)
             })
 
             # Render the template
