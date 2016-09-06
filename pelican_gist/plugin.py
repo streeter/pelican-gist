@@ -121,7 +121,7 @@ def replace_gist_tags(generator):
             logger.info('[gist]: Found gist id {} with filename {} and filetype {}'.format(
                 gist_id,
                 filename,
-                filetype 
+                filetype,
             ))
 
             if should_cache:
