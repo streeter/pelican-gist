@@ -109,8 +109,6 @@ def replace_gist_tags(generator):
     cache_location = generator.context.get('GIST_CACHE_LOCATION')
     pygments_style = generator.context.get('GIST_PYGMENTS_STYLE')
     
-    # added by SgtDaJim on 20170809
-    # To solve the problem that it alerts "local variable 'body' referenced before assignment" when compiling blogs.
     body = None
 
     for article in generator.articles:
