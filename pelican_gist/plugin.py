@@ -108,6 +108,8 @@ def replace_gist_tags(generator):
     should_cache = generator.context.get('GIST_CACHE_ENABLED')
     cache_location = generator.context.get('GIST_CACHE_LOCATION')
     pygments_style = generator.context.get('GIST_PYGMENTS_STYLE')
+    
+    body = None
 
     for article in generator.articles:
         for match in gist_regex.findall(article._content):
