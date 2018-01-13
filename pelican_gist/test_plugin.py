@@ -29,7 +29,7 @@ def test_gist_regex_match():
     assert match[2] == "3254906"
     assert match[4] == "brew-update-notifier.sh"
     assert match[6] == "bash"
-    
+   
 def test_gist_url():
     gist_id = str(3254906)
     filename = 'brew-update-notifier.sh'
