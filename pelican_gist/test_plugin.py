@@ -12,8 +12,24 @@ import os
 from pelican_gist import plugin as gistplugin
 from mock import patch
 import requests.models
+from pelican_gist.plugin import gist_regex
 
-
+def test_gist_regex_match():
+    #Test for gist id only
+    match = gist_regex.search("<p>[gist:id=3254906]</p>")
+    assert match[2] == "3254906"
+    
+    # Test for tag with gist id and filename
+    match = gist_regex.search("<p>[gist:id=3254906,file=brew-update-notifier.sh]</p>")
+    assert match[2] == "3254906"
+    assert match[4] == "brew-update-notifier.sh"
+    
+    # Test for tag with gist id, filename, and filetype. 
+    match = gist_regex.search("<p>[gist:id=3254906,file=brew-update-notifier.sh,filetype=bash]</p>")
+    assert match[2] == "3254906"
+    assert match[4] == "brew-update-notifier.sh"
+    assert match[6] == "bash"
+   
 def test_gist_url():
     gist_id = str(3254906)
     filename = 'brew-update-notifier.sh'

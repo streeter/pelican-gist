@@ -18,7 +18,7 @@ import pygments
 
 logger = logging.getLogger(__name__)
 gist_regex = re.compile(
-    r'(<p>\[gist:id\=([0-9a-fA-F]+)(,file\=([^\]]+))?(,filetype\=([a-zA-Z]+))?\]</p>)')
+    r'(<p>\[gist:id\=([0-9a-fA-F]+)(,file\=([^\],]+))?(,filetype\=([a-zA-Z]+))?\]</p>)')
 gist_template = """<div class="gist">
     <script src='{{script_url}}'></script>
     <noscript>
