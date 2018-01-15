@@ -103,6 +103,8 @@ See `contributors`_ on GitHub.
 Changelog
 ---------
 
+- 0.3.4 - Fix regex to support filetype (credit [@andrlik](https://github.com/andrlik))
+
 - 0.3.3 - Support gists with UTF-8 characters
 
 - 0.3.2 - Added universal wheel support
